@@ -1,0 +1,209 @@
+swagger: '2.0'
+info:
+  title: Dm2 - ZkConfigService
+  description: API for ZkConfigService
+  version: "1.0.0"
+# the domain of the service
+host: x.x.x.x:10012
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+basePath: /v1
+consumes:
+  - application/json
+  - text/xml
+produces:
+  - application/json
+security:
+  - RESTfulAuthorization: []
+paths:
+  /login:
+    post:
+      summary: User Login
+      parameters:
+        - name: data
+          in: body
+          description: Login params
+          required: true
+          schema:
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        201:
+          description: Login Success
+          schema:
+            properties:
+              statusCode:
+                type: integer
+                format: int
+              success:
+                type: boolean
+              timestamp:
+                type: integer
+                format: long
+              token:
+                type: string
+        422:
+          description: Login fail, the username or password is error.
+          schema:
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+                format: int
+              success:
+                type: boolean
+              timestamp:
+                type: integer
+                format: long
+  /logout:
+    delete:
+      summary: User Logout
+      responses:
+       201:
+          description: Logout success
+          schema:
+            $ref: '#/definitions/success'
+       401:
+          description: Not login
+          schema:
+            $ref: '#/definitions/notLogin'
+  /configuration:
+    get:
+      summary: Select configuration
+      parameters:
+        - name: type
+          description: Choose it's /serviceConfig or /infrastructure.
+          in: query
+          required: true
+          type: string
+        - name: serviceName
+          description: Describe it's which service.
+          in: query
+          type: string
+      responses:
+        200:
+          description: Show all services and amount when serviceName is null.
+          schema:
+            type: array
+            items:
+              properties:
+                serviceName:
+                  type: string
+                amount:
+                  type: integer
+                  format: int
+        200:
+          description: Show all key and value when serviceName is not null.
+          schema:
+            type: array
+            items:
+              properties:
+                key:
+                  type: string
+                value:
+                  type: string
+        401:
+          description: Not login
+          schema:
+            $ref: '#/definitions/notLogin'
+    put:
+      summary: Update service's value, service must exist.
+      parameters:
+        - name: data
+          in: body
+          description: Type choose it's /serviceConfig or /infrastructure, serviceName describes it's which service.
+          required: true
+          schema:
+            properties:
+              type:
+                type: string
+              serviceName:
+                type: string
+              key:
+                type: string
+              value:
+                type: string
+      responses:
+        201:
+          description: Update success
+          schema:
+            $ref: '#/definitions/success'
+        401:
+          description: Not login
+          schema:
+            $ref: '#/definitions/notLogin'
+        422:
+          description: Update fail
+          schema:
+            $ref: '#/definitions/error'
+  /connection:
+    get:
+      summary: Select connection
+      responses:
+        200:
+          description: Select connection success.
+          schema:
+            type: array
+            items:
+              properties:
+                serviceName:
+                  type: string
+                connections:
+                  properties:
+                    ip:
+                      type: string
+                    port:
+                      type: integer
+                    state:
+                      type: string
+        401:
+          description: Not login
+          schema:
+            $ref: '#/definitions/notLogin'
+securityDefinitions:
+  RESTfulAuthorization:
+    name: Authorization
+    in: header
+    type: apiKey
+    description: The customer user token of authorization.
+definitions:
+  success:
+    properties:
+      statusCode:
+        type: integer
+        format: int
+      success:
+        type: boolean
+      timestamp:
+        type: integer
+        format: long
+  notLogin:
+    properties:
+      message:
+        type: string
+      statusCode:
+        type: integer
+        format: int
+      success:
+        type: boolean
+      timestamp:
+        type: integer
+        format: long
+  error:
+    properties:
+      message:
+        type: string
+      statusCode:
+        type: integer
+        format: int
+      success:
+        type: boolean
+      timestamp:
+        type: integer
+        format: long
