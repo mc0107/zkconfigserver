@@ -1,9 +1,9 @@
-package com.banclogix.dm2.zkconfigserver.main;
+package com.zkconfigserver.verticle;
 
-import com.banclogix.dm2.common.util.ConfigurationUtil;
-import com.banclogix.dm2.zkconfigserver.controller.AuthenController;
-import com.banclogix.dm2.zkconfigserver.controller.ExceptionController;
-import com.banclogix.dm2.zkconfigserver.controller.ZkNodeController;
+import com.zkconfigserver.config.Configuration;
+import com.zkconfigserver.controller.AuthenController;
+import com.zkconfigserver.controller.ExceptionController;
+import com.zkconfigserver.controller.ZkNodeController;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
@@ -13,14 +13,14 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
 /**
- * Created by madl on 2016/5/23.
+ * Created by madali on 2016/5/23.
  */
 public class MainVerticle extends AbstractVerticle {
     private static final AuthenController authenController = new AuthenController();
     private static final ZkNodeController zkNodeController = new ZkNodeController();
     private static final ExceptionController exceptionController = new ExceptionController();
 
-    private static final int SERVER_PORT = ConfigurationUtil.SERVER_PORT;
+    private static final int SERVER_PORT = Configuration.SERVER_PORT;
     private static final String BASE_PATH = "/v1";
 
     private static final Vertx vertx = Vertx.vertx();
@@ -33,14 +33,14 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public void start() {
         router.route().handler(CorsHandler.create("*")
-                        .allowedMethod(HttpMethod.GET)
-                        .allowedMethod(HttpMethod.POST)
-                        .allowedMethod(HttpMethod.PUT)
-                        .allowedMethod(HttpMethod.DELETE)
-                        .allowedHeader("X-PINGARUNER")
-                        .allowedHeader("Content-Type")
-                                //设置Authorization可跨域
-                        .allowedHeader("Authorization")
+                .allowedMethod(HttpMethod.GET)
+                .allowedMethod(HttpMethod.POST)
+                .allowedMethod(HttpMethod.PUT)
+                .allowedMethod(HttpMethod.DELETE)
+                .allowedHeader("X-PINGARUNER")
+                .allowedHeader("Content-Type")
+                //设置Authorization可跨域
+                .allowedHeader("Authorization")
         );
         router.route().handler(BodyHandler.create());
 

@@ -1,8 +1,8 @@
-package com.banclogix.dm2.zkconfigserver.controller;
+package com.zkconfigserver.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.banclogix.dm2.zkconfigserver.config.Configuration;
-import com.banclogix.dm2.zkconfigserver.entity.OperationResult;
+import com.zkconfigserver.config.Configuration;
+import com.zkconfigserver.entity.OperationResult;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class ExceptionController {
 

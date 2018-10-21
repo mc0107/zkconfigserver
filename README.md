@@ -29,9 +29,9 @@
 			服务创建的节点必须是 "永久节点"
 			服务节点下的子节点名称唯一，可以自己维护
 			例如:
-				需要在     /dm2/connected/authoService 节点下创建一个被用于服务发现的永久节点 authoService_1
-				只需要定义 /dm2/connected/authoService/authoService
-				会出现    /dm2/connected/authoService/authoService_1 这样的结果
+				需要在     /zk_vertx/connected/authoService 节点下创建一个被用于服务发现的永久节点 authoService_1
+				只需要定义 /zk_vertx/connected/authoService/authoService
+				会出现    /zk_vertx/connected/authoService/authoService_1 这样的结果
 
 			code:
 				client.create().withMode(CreateMode.PERSISTENT).forPath(path, new byte[]{});

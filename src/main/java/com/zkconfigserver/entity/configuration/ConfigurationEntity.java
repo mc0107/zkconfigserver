@@ -1,7 +1,7 @@
-package com.banclogix.dm2.zkconfigserver.entity.configuration;
+package com.zkconfigserver.entity.configuration;
 
 /**
- * Created by madl on 2016/6/1.
+ * Created by madali on 2016/6/1.
  */
 public class ConfigurationEntity {
 

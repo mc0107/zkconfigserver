@@ -1,8 +1,8 @@
-package com.banclogix.dm2.zkconfigserver.controller;
+package com.zkconfigserver.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.banclogix.dm2.zkconfigserver.config.Configuration;
-import com.banclogix.dm2.zkconfigserver.entity.OperationResult;
+import com.zkconfigserver.config.Configuration;
+import com.zkconfigserver.entity.OperationResult;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 /**
- * Created by madl on 2016/5/24.
+ * Created by madali on 2016/5/24.
  */
 public class AuthenController extends BaseController {
 
@@ -36,7 +36,6 @@ public class AuthenController extends BaseController {
         } else {
             LOGGER.error("Login fail: received incorrect login request username [{}], password:[{}]", username, password);
             routingContext.fail(Configuration.E_422);
-            return;
         }
     }
 

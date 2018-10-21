@@ -1,6 +1,6 @@
-package com.banclogix.dm2.zkconfigserver.controller;
+package com.zkconfigserver.controller;
 
-import com.banclogix.dm2.zkconfigserver.config.Configuration;
+import com.zkconfigserver.config.Configuration;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class BaseController {
 

@@ -1,7 +1,7 @@
-package com.banclogix.dm2.zkconfigserver.entity.connection;
+package com.zkconfigserver.entity.connection;
 
 /**
- * Created by madl on 2016/6/3.
+ * Created by madali on 2016/6/3.
  */
 public class ConnectionNodeEntity {
 

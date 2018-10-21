@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Dm2 - ZkConfigService
+  title: zk_vertx - ZkConfigService
   description: API for ZkConfigService
   version: "1.0.0"
 # the domain of the service

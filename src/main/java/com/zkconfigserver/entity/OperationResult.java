@@ -1,9 +1,9 @@
-package com.banclogix.dm2.zkconfigserver.entity;
+package com.zkconfigserver.entity;
 
 import java.util.Date;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class OperationResult {
 

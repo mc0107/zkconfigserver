@@ -1,10 +1,10 @@
-package com.banclogix.dm2.zkconfigserver.entity.connection;
+package com.zkconfigserver.entity.connection;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class ConnectionEntity {
 

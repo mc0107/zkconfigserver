@@ -1,6 +1,6 @@
-package com.banclogix.dm2.zkconfigserver.service;
+package com.zkconfigserver.service;
 
-import com.banclogix.dm2.zkconfigserver.dao.ZkNodeDao;
+import com.zkconfigserver.util.ZkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by madl on 2016/6/13.
+ * Created by madali on 2016/6/13.
  */
 public class NodeService {
 
@@ -16,8 +16,6 @@ public class NodeService {
 
     //默认的环境变量中的初始化标记为false，表示不使用properties配置文件中的配置覆盖现有的服务中的配置。
     private static final boolean DEFAULT_INITIAL_FLAG = false;
-
-    private ZkNodeDao zkNodeDao = new ZkNodeDao();
 
     public NodeService() {
     }
@@ -32,12 +30,12 @@ public class NodeService {
     public void createNode(String path, String data) throws Exception {
 
         //不管环境变量中的初始化标记是什么，只要properties配置文件中的配置存在而zookeeper中对应节点不存在，就都会在zookeeper中创建节点。
-        if (!zkNodeDao.checkNode(path)) {
+        if (!ZkUtil.checkNode(path)) {
             if (data == null || data.length() == 0) {
-                zkNodeDao.addNode(path);
+                ZkUtil.addNode(path);
                 LOGGER.info("create Node: " + path);
             } else {
-                zkNodeDao.addNode(path, data);
+                ZkUtil.addNode(path, data);
                 LOGGER.info("create Node: " + path);
             }
         } else {
@@ -55,11 +53,8 @@ public class NodeService {
 
             //只有当环境变量中的初始化标记为true，并且properties配置文件中的data不为空时，才会使用properties配置文件中的配置覆盖现有的服务中的配置（溯源）；否则不作处理
             if (initialFlag && data != null && data.length() > 0) {
-                zkNodeDao.setData(path, data);
+                ZkUtil.setData(path, data);
                 LOGGER.info("set data : path: [{}], data: [{}]", path, data);
-            } else {
-
-                return;
             }
 
         }
@@ -72,14 +67,14 @@ public class NodeService {
      * @throws Exception
      */
     public void deleteNode(String path) throws Exception {
-        if (path == null || !zkNodeDao.checkNode(path)) {
+        if (path == null || !ZkUtil.checkNode(path)) {
             return;
         }
 
-        List<Map.Entry<String, String>> list = zkNodeDao.listNode(path);
+        List<Map.Entry<String, String>> list = ZkUtil.listNode(path);
         if (list == null || list.size() == 0) {
             LOGGER.info("delete node: " + path);
-            zkNodeDao.deleteNode(path);
+            ZkUtil.deleteNode(path);
             return;
         }
 
@@ -89,6 +84,7 @@ public class NodeService {
 
         LOGGER.info("delete node: " + path);
         //循环删除path路径下的子节点之后，删除path节点。
-        zkNodeDao.deleteNode(path);
+        ZkUtil.deleteNode(path);
     }
+
 }

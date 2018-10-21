@@ -1,7 +1,7 @@
-package com.banclogix.dm2.zkconfigserver.factory;
+package com.zkconfigserver.factory;
 
-import com.banclogix.dm2.zkconfigserver.dao.ZkNodeDao;
-import com.banclogix.dm2.zkconfigserver.service.NodeService;
+import com.zkconfigserver.service.NodeService;
+import com.zkconfigserver.util.ZkUtil;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class ZkNodeFactory {
 
@@ -44,34 +44,18 @@ public class ZkNodeFactory {
     private static PropertiesConfiguration configProp;
 
     static {
-
         // 读取环境变量中的DEFAULT_LIST_DELIMITER  取其第一个字符为apache.commons的分隔符
         String d = System.getenv("DEFAULT_LIST_DELIMITER");
 
         char defaultListDelimiter = d == null ? '-' : d.charAt(0);
 
-        // 使用apache.commons的读取properties文件方法 需先修改默认的分隔符,为-  这样properties文件中,前就不用添加转移字符\
+        // 使用apache.commons的读取properties文件方法 需先修改默认的分隔符,为-  这样properties文件中,前就不用添加转义字符\
         AbstractConfiguration.setDefaultListDelimiter(defaultListDelimiter);
 
         try {
-            try {
-                //生产环境中，properties配置文件存放在config目录下
-                nodeProp = new PropertiesConfiguration("config/zookeeper-node.properties");
-            } catch (Exception e) {
-                //本机测试环境中，properties配置文件存放在resources目录下
-                nodeProp = new PropertiesConfiguration("zookeeper-node.properties");
-            }
+            nodeProp = new PropertiesConfiguration("zookeeper-node.properties");
+            configProp = new PropertiesConfiguration("zookeeper-config.properties");
 
-            try {
-                //生产环境中，properties配置文件存放在config目录下
-                configProp = new PropertiesConfiguration("config/zookeeper-config.properties");
-            } catch (Exception e) {
-                //本机测试环境中，properties配置文件存放在resources目录下
-                configProp = new PropertiesConfiguration("zookeeper-config.properties");
-            }
-
-            LOGGER.info("Read zookeeper-node file from [{}]", nodeProp.getPath());
-            LOGGER.info("Read zookeeper-config file from [{}]", configProp.getPath());
             nodeProp.setAutoSave(true);
             configProp.setAutoSave(true);
         } catch (ConfigurationException e) {
@@ -153,7 +137,7 @@ public class ZkNodeFactory {
 
     private static void updateStartSign() throws Exception {
         String startSignNode = allNodeMap.get("zookeeper.root.startSign");
-        ZkNodeDao.setData(startSignNode, String.valueOf(true));
+        ZkUtil.setData(startSignNode, String.valueOf(true));
         LOGGER.info("The zookeeper node named \"" + startSignNode + "\" have been updated.");
     }
 
@@ -177,11 +161,11 @@ public class ZkNodeFactory {
     }
 
     /**
-     * 创建NAMESPACE（dm2）下所有的节点结构与默认数据
+     * 创建NAMESPACE（zk_vertx）下所有的节点结构与默认数据
      */
     public static void buildNode() {
         try {
-            ZkNodeDao.connect();
+            ZkUtil.connect();
 
             // 强制删除已经存在的所有节点，然后再重新建立节点（不推荐使用）
 //            destroyAllExistNodes();

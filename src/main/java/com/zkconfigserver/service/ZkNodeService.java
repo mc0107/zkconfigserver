@@ -1,13 +1,13 @@
-package com.banclogix.dm2.zkconfigserver.service;
+package com.zkconfigserver.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.banclogix.dm2.common.entity.ZkConfigurationNodeEntity;
-import com.banclogix.dm2.zkconfigserver.config.Configuration;
-import com.banclogix.dm2.zkconfigserver.dao.ZkNodeDao;
-import com.banclogix.dm2.zkconfigserver.entity.configuration.ConfigurationEntity;
-import com.banclogix.dm2.zkconfigserver.entity.connection.ConnectionEntity;
-import com.banclogix.dm2.zkconfigserver.entity.connection.ConnectionNodeEntity;
-import com.banclogix.dm2.zkconfigserver.factory.ZkNodeFactory;
+import com.zkconfigserver.config.Configuration;
+import com.zkconfigserver.entity.configuration.ConfigurationEntity;
+import com.zkconfigserver.entity.connection.ConnectionEntity;
+import com.zkconfigserver.entity.connection.ConnectionNodeEntity;
+import com.zkconfigserver.factory.ZkNodeFactory;
+import com.zkconfigserver.util.ZkUtil;
+import com.zkconfigserver.entity.ZkConfigurationNodeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class ZkNodeService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZkNodeService.class);
-
-    private ZkNodeDao zkNodeDao = new ZkNodeDao();
 
     public ZkNodeService() {
     }
@@ -37,10 +35,10 @@ public class ZkNodeService {
         ConfigurationEntity configurationEntity;
 
         try {
-            List<String> serviceNames = zkNodeDao.getChildren(type);
+            List<String> serviceNames = ZkUtil.getChildren(type);
             for (String serviceName : serviceNames) {
                 configurationEntity = new ConfigurationEntity(serviceName, 0);
-                List<String> childrenList = zkNodeDao.getChildren(type + "/" + serviceName);
+                List<String> childrenList = ZkUtil.getChildren(type + "/" + serviceName);
                 if (childrenList != null && childrenList.size() > 0)
                     configurationEntity = new ConfigurationEntity(serviceName, childrenList.size());
                 configurationEntityList.add(configurationEntity);
@@ -63,9 +61,9 @@ public class ZkNodeService {
         ZkConfigurationNodeEntity zkConfigurationNodeEntity;
 
         try {
-            List<String> keys = zkNodeDao.getChildren(type + "/" + serviceName);
+            List<String> keys = ZkUtil.getChildren(type + "/" + serviceName);
             for (String key : keys) {
-                String value = new String(zkNodeDao.getData(type + "/" + serviceName + "/" + key), "utf-8");
+                String value = new String(ZkUtil.getData(type + "/" + serviceName + "/" + key), "utf-8");
                 zkConfigurationNodeEntity = new ZkConfigurationNodeEntity(key, value);
                 zkConfigurationNodeEntityList.add(zkConfigurationNodeEntity);
             }
@@ -89,7 +87,7 @@ public class ZkNodeService {
         List<String> serviceNames;
 
         try {
-            serviceNames = zkNodeDao.getChildren(connectionPath);
+            serviceNames = ZkUtil.getChildren(connectionPath);
             //没有connection  return
             if (serviceNames == null || serviceNames.size() == 0) {
                 return connectionEntityList;
@@ -101,7 +99,7 @@ public class ZkNodeService {
         //有connection   遍历
         for (String serviceName : serviceNames) {
             try {
-                List<String> nodePaths = zkNodeDao.getChildren(connectionPath + "/" + serviceName);
+                List<String> nodePaths = ZkUtil.getChildren(connectionPath + "/" + serviceName);
 
                 if (nodePaths == null || nodePaths.size() == 0) {
                     //节点没有数据：将serviceName赋给connectionEntity，添加connectionEntity到connectionEntityList中
@@ -114,7 +112,7 @@ public class ZkNodeService {
                     for (String nodePath : nodePaths) {
                         String path = connectionPath + "/" + serviceName + "/" + nodePath;
 
-                        String ipPortState = new String(zkNodeDao.getData(path), "UTF-8");
+                        String ipPortState = new String(ZkUtil.getData(path), "UTF-8");
                         JSONObject jsonObject = JSONObject.parseObject(ipPortState);
                         String ip = jsonObject.getString("Ip");
                         int port = jsonObject.getIntValue("Port");
@@ -150,8 +148,8 @@ public class ZkNodeService {
 
         String path = type + "/" + serviceName + "/" + key;
         try {
-            if (zkNodeDao.checkNode(path)) {
-                zkNodeDao.setData(path, value);
+            if (ZkUtil.checkNode(path)) {
+                ZkUtil.setData(path, value);
             } else {
                 //获取节点：节点不存在时，返回
                 LOGGER.error("There is no zookeeper node named: type: [{}], serviceName: [{}], key: [{}]", type, serviceName, key);

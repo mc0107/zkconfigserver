@@ -1,18 +1,22 @@
-package com.banclogix.dm2.zkconfigserver.config;
+package com.zkconfigserver.config;
+
+import com.zkconfigserver.util.PropertiesUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class Configuration {
 
     public static final String CONTENT_JSON = "application/json;charset=UTF-8";
     private static final Map<Integer, String> errorCodeMap = new HashMap<>();
     private static final Map<Integer, String> connectionStateMap = new HashMap<>();
-    private static final String token;
+    private static final String token = UUID.randomUUID().toString();
+    public static final Integer SERVER_PORT = Integer.parseInt(PropertiesUtil.getValue("SERVER_PORT"));
+    public static final String ZOOKEEPER_HOST = PropertiesUtil.getValue("ZOOKEEPER_HOST");
 
     //没有登录
     public static final int E_401 = 401;
@@ -29,7 +33,6 @@ public class Configuration {
         connectionStateMap.put(4, "InsertLoading");
         connectionStateMap.put(5, "DeleteLoading");
         connectionStateMap.put(6, "ClearPreExit");
-        token = UUID.randomUUID().toString();
     }
 
     public static String getToken() {
@@ -43,4 +46,5 @@ public class Configuration {
     public static Map<Integer, String> getConnectionStateMap() {
         return connectionStateMap;
     }
+
 }

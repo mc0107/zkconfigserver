@@ -1,12 +1,12 @@
-package com.banclogix.dm2.zkconfigserver.controller;
+package com.zkconfigserver.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.banclogix.dm2.common.entity.ZkConfigurationNodeEntity;
-import com.banclogix.dm2.zkconfigserver.config.Configuration;
-import com.banclogix.dm2.zkconfigserver.entity.OperationResult;
-import com.banclogix.dm2.zkconfigserver.entity.configuration.ConfigurationEntity;
-import com.banclogix.dm2.zkconfigserver.entity.connection.ConnectionEntity;
-import com.banclogix.dm2.zkconfigserver.service.ZkNodeService;
+import com.zkconfigserver.config.Configuration;
+import com.zkconfigserver.entity.OperationResult;
+import com.zkconfigserver.entity.configuration.ConfigurationEntity;
+import com.zkconfigserver.entity.connection.ConnectionEntity;
+import com.zkconfigserver.service.ZkNodeService;
+import com.zkconfigserver.entity.ZkConfigurationNodeEntity;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by madl on 2016/5/25.
+ * Created by madali on 2016/5/25.
  */
 public class ZkNodeController extends BaseController {
 
@@ -66,7 +66,6 @@ public class ZkNodeController extends BaseController {
         } else {
             LOGGER.error("Select configuration fail: type: [{}], serviceName: [{}]", type, serviceName);
             routingContext.fail(Configuration.E_422);
-            return;
         }
     }
 
@@ -88,7 +87,6 @@ public class ZkNodeController extends BaseController {
             response.end(JSONObject.toJSONString(connectionEntityList));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            return;
         }
     }
 
@@ -121,7 +119,6 @@ public class ZkNodeController extends BaseController {
         } else {
             LOGGER.error("Update configuration fail: type: [{}]", type);
             routingContext.fail(Configuration.E_422);
-            return;
         }
     }
 }
